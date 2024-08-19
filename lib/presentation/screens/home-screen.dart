@@ -1,7 +1,7 @@
 import 'package:cicuge_app/config/config.dart';
 import 'package:flutter/material.dart';
-import 'package:cicuge_app/screens/screens.dart';
-import 'package:cicuge_app/widgets/widgets.dart';
+import 'package:cicuge_app/presentation/screens/screens.dart';
+import 'package:cicuge_app/presentation/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
