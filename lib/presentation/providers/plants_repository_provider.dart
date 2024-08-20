@@ -24,12 +24,13 @@ class PlantsNotifier extends StateNotifier<PlantType> {
   PlantsNotifier({required this.fetchPlant})
       : super(PlantType(type: 'type', confidence: 100));
 
-  Future<void> getPlant() async {
-    if (isLoading) return;
+  Future<void> getPlant(File file) async {
+    // if (isLoading) return;
 
-    isLoading = true;
-    currentFile = currentFile;
-    final plant = await fetchPlant();
+    // isLoading = true;
+    currentFile = file;
+    print('El archivo en el provider es $currentFile');
+    final plant = await fetchPlant(file: currentFile);
     state = plant;
     // Simula efecto de carga
     await Future.delayed(const Duration(seconds: 2));

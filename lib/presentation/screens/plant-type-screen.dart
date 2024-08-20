@@ -18,7 +18,7 @@ class PlantTypeScreenState extends ConsumerState<PlantTypeScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(typePlantProvider.notifier).getPlant();
+    // ref.read(typePlantProvider.notifier).getPlant();
   }
 
   File? imageFile;
@@ -27,10 +27,20 @@ class PlantTypeScreenState extends ConsumerState<PlantTypeScreen> {
     final pickedFile =
         await ImagePicker().pickImage(source: source, imageQuality: 100);
     if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
       setState(() {
         imageFile = File(pickedFile.path);
       });
     }
+  }
+
+  Future<void> _sendImageFile(File? imageFile) async {
+    if (imageFile == null) {
+      print('No hay archivo, no llamaré al provider');
+      return;
+    }
+    print('Llamado al método del provider para traer la planta');
+    ref.read(typePlantProvider.notifier).getPlant(imageFile);
   }
 
   @override
@@ -46,7 +56,7 @@ class PlantTypeScreenState extends ConsumerState<PlantTypeScreen> {
       appBar: AppBar(
         backgroundColor: AppTheme().colorLightAppScheme.primary,
         title: Text(
-          'Evaluar el tipo de planta2',
+          'Evaluar el tipo de planta',
           style: AppTheme().appTextTheme.titleLarge,
         ),
         leading: IconButton(
@@ -91,7 +101,9 @@ class PlantTypeScreenState extends ConsumerState<PlantTypeScreen> {
                   text: 'Analizar el archivo',
                   radius: const Radius.circular(20),
                   icon: const Icon(Icons.send_and_archive),
-                  onPressed: () {},
+                  onPressed: () {
+                    _sendImageFile(imageFile);
+                  },
                 ),
               ],
             ),
