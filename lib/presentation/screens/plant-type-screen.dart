@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:animate_do/animate_do.dart';
+import 'package:cicuge_app/domain/entities/plant-type.dart';
 import 'package:cicuge_app/presentation/providers/plants_repository_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cicuge_app/config/config.dart';
@@ -18,10 +20,10 @@ class PlantTypeScreenState extends ConsumerState<PlantTypeScreen> {
   @override
   void initState() {
     super.initState();
-    // ref.read(typePlantProvider.notifier).getPlant();
   }
 
   File? imageFile;
+  bool plantTypeFetched = false;
 
   Future<void> _selectImage(ImageSource source) async {
     final pickedFile =
@@ -36,21 +38,15 @@ class PlantTypeScreenState extends ConsumerState<PlantTypeScreen> {
 
   Future<void> _sendImageFile(File? imageFile) async {
     if (imageFile == null) {
-      print('No hay archivo, no llamaré al provider');
       return;
     }
-    print('Llamado al método del provider para traer la planta');
     ref.read(typePlantProvider.notifier).getPlant(imageFile);
+    plantTypeFetched = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    try {
-      final plantType = ref.watch(typePlantProvider);
-      print('LA PLANT TYPE ES: $plantType');
-    } catch (e) {
-      print('Error message: ${e}');
-    }
+    final plantType = ref.watch(typePlantProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,18 +65,32 @@ class PlantTypeScreenState extends ConsumerState<PlantTypeScreen> {
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           imageFile == null
-              ? Image.asset(
-                  '/assets/images/upload-img-svg.png',
-                  width: 200,
-                  height: 200,
+              ? Image.network(
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuYrruv4mBYER13NGEO_CDqMR8HKxOj60yiw&s',
                   fit: BoxFit.cover,
-                )
-              : Image.file(
-                  imageFile!,
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) {
+                    return const CircularProgressIndicator(
+                      color: Colors.blue,
+                      strokeWidth: 2.0,
+                    );
+                  } else {
+                    return FadeIn(child: child);
+                  }
+                })
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.file(
+                    imageFile!,
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
                 ),
+          const SizedBox(
+            height: 20,
+          ),
+          if (plantTypeFetched) Text(plantType.type),
           const SizedBox(
             height: 20,
           ),

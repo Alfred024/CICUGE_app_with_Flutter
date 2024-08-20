@@ -5,7 +5,7 @@ class PlantFromGCloud {
   });
 
   final String plantClass;
-  final int confidence;
+  final double confidence;
 
   factory PlantFromGCloud.fromJson(Map<String, dynamic> json) =>
       PlantFromGCloud(

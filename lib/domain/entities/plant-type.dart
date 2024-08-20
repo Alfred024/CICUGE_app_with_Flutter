@@ -1,6 +1,6 @@
 class PlantType {
   final String type;
-  final int confidence;
+  final double confidence;
 
   PlantType({
     required this.type,
